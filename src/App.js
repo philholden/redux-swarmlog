@@ -36,9 +36,9 @@ class _App extends Component {
   render() {
     return (
       <div>
-        {'a' + JSON.stringify(this.props.state)}
-        <Counter increment={1} color={NICE} />
-        <Counter increment={5} color={SUPER_NICE} />
+        <pre>
+        {JSON.stringify(this.props.state, null, 2)}
+        </pre>
         <HelloWorld />
         <img src={man} />
       </div>

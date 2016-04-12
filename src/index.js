@@ -10,11 +10,11 @@ import { randomBytes } from 'crypto'
 //import rootSaga from './sagas'
 //import sagaMonitor from '../../sagaMonitor'
 import {
-  configureSongStoreDb,
-  songStoreDbMiddleware,
-  getSongStoresFromDb,
-  addSongStore
-} from './song-store-db'
+  configureReduxSwarmLog,
+  reduxSwarmLogMiddleware,
+  getSwarmLogsFromDb,
+  addReduxSwarmLog
+} from './redux-swarmlog'
 
 import * as actions from './actions/index'
 
@@ -28,7 +28,7 @@ const store = createStore(
     applyMiddleware(
 //    sagaMonitor,
 //    createSagaMiddleware(rootSaga)
-      songStoreDbMiddleware,
+      reduxSwarmLogMiddleware,
     ),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )
@@ -36,10 +36,10 @@ const store = createStore(
 
 window.dispatch = store.dispatch
 
-configureSongStoreDb(store)
-getSongStoresFromDb(songStores => {
-  if (Object.keys(songStores).length === 0) {
-    addSongStore({ name: 'Main' })
+configureReduxSwarmLog(store)
+getSwarmLogsFromDb(reduxSwarmLogs => {
+  if (Object.keys(reduxSwarmLogs).length === 0) {
+    addReduxSwarmLog({ name: 'Main' })
   }
 })
 

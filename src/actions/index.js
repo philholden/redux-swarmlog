@@ -17,7 +17,8 @@ export function addSongStore(songStoreId) {
   return {
     type: ADD_SONG_STORE,
     songStoreId,
-    sessionId
+    sessionId,
+    reduxSwarmLogId: songStoreId
   }
 }
 
@@ -25,7 +26,8 @@ export function removeSongStore(songStoreId) {
   return {
     type: REMOVE_SONG_STORE,
     songStoreId,
-    sessionId
+    sessionId,
+    reduxSwarmLogId: songStoreId
   }
 }
 
@@ -34,7 +36,8 @@ export function putSongInSongStore(songStoreId, song) {
     type: PUT_SONG_IN_SONG_STORE,
     songStoreId,
     song,
-    sessionId
+    sessionId,
+    reduxSwarmLogId: songStoreId
   }
 }
 
@@ -42,6 +45,7 @@ export function removeSongFromSongStore(songStoreId, songId) {
   return {
     type: REMOVE_SONG_FROM_SONG_STORE,
     songStoreId,
-    songId
+    songId,
+    reduxSwarmLogId: songStoreId
   }
 }
