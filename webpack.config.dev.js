@@ -19,15 +19,15 @@ module.exports = {
     publish: [
       'eventsource-polyfill', // necessary for hot reloading with IE
       'webpack-hot-middleware/client',
-      './src/publish'
+      './examples/src/publish'
     ],
     consume: [
       'eventsource-polyfill', // necessary for hot reloading with IE
       'webpack-hot-middleware/client',
-      './src/consume'
+      './examples/src/consume'
     ]
 
-    
+
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -41,6 +41,7 @@ module.exports = {
   resolve: {
     modulesDirectories: [
       path.join(__dirname, 'src'),
+      path.join(__dirname, 'examples', 'src'),
       'node_modules',
       'node_modules/component-archetype/node_modules'
     ]
@@ -55,7 +56,7 @@ module.exports = {
       {
         test: /\.jsx?/,
         loader: require.resolve('babel-loader'),
-        include: path.join(__dirname, 'src')
+        include: [ path.join(__dirname, 'src'),  path.join(__dirname, 'examples', 'src')]
       },
       {
         test: /\.png$/,

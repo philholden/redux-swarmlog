@@ -1,7 +1,7 @@
 {
-  "name": "@philholden/component-boilerplate",
+  "name": "@philholden/redux-swarmlog",
   "version": "0.0.1-semantic",
-  "description": "A new Webpack boilerplate with hot reloading React components, and error handling on module and component level.",
+  "description": "Sync Redux action log over WebRTC, persist log in IndexDB to give autosyncing persistent data",
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf lib",

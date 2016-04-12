@@ -8,8 +8,8 @@ import sodium from 'chloride/browser'
 
 window.sodium = sodium
 
-//window.db = memdb()
-window.db = levelup('foo', { db: leveljs })
+window.db = memdb()
+//window.db = levelup('foo', { db: leveljs })
 //indexedDB.deleteDatabase('IDBWrapper-foo')
 
 const log = swarmlog({
@@ -22,11 +22,17 @@ const log = swarmlog({
 
 let times = 0
 setInterval(function () {
-  log.append({ logo: 'HELLO!x' + times })
+  const data = { message: 'HELLO!x' + times }
+  log.append(data)
   times++
-}, 10000)
+  const logEl = document.createElement('div')
+  logEl.innerHTML = `<b>SENT:</b> ${JSON.stringify(data)}`
+  document.body.insertBefore(logEl, document.body.firstChild)
+}, 3000)
 
 log.createReadStream({ live: true })
   .on('data', function (data) {
-    console.log('RECEIVED', data.key, data.value)
+    const logEl = document.createElement('div')
+    logEl.innerHTML = `<b>RECEIVED:</b> ${JSON.stringify(data.value)}`
+    document.body.insertBefore(logEl, document.body.firstChild)
   })
