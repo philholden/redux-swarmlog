@@ -1,0 +1,119 @@
+{
+  "name": "@philholden/component-boilerplate",
+  "version": "0.0.1-semantic",
+  "description": "A new Webpack boilerplate with hot reloading React components, and error handling on module and component level.",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "rimraf lib",
+    "build:webpack": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
+    "build:babel": "NODE_ENV=lib babel src --out-dir lib",
+    "build": "npm run clean && npm run build:babel",
+    "start": "node devServer.js",
+    "lint": "eslint src",
+    "commit": "git-cz",
+    "open-coverage": "open ./coverage/lcov-report/index.html",
+    "check-coverage": "nyc check-coverage --statements 0 --branches 0 --functions 0 --lines 0",
+    "report-coverage": "nyc report --reporter=text-lcov | codecov",
+    "test": "NODE_ENV=test ava src/**/*.test.js --require babel-register --require ./src/__tests__/null-compiler",
+    "test:watch": "nodemon -w src --exec 'npm t -- --verbose'",
+    "test:cover": "nyc --reporter=lcov --reporter=text npm t",
+    "semantic-release": "semantic-release pre && npm publish --access=public && semantic-release post"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/philholden/component-boilerplate.git"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "boilerplate",
+    "hot",
+    "reload",
+    "hmr",
+    "live",
+    "edit",
+    "webpack",
+    "babel",
+    "react-transform"
+  ],
+  "author": "Phil Holden (http://github.com/philholden)",
+  "license": "CC0",
+  "bugs": {
+    "url": "https://github.com/philholden/component-boilerplate/issues"
+  },
+  "homepage": "https://github.com/philholden/component-boilerplate/",
+  "devDependencies": {
+    "ava": "^0.9.1",
+    "babel-cli": "^6.4.0",
+    "babel-core": "^6.3.15",
+    "babel-eslint": "^5.0.0-beta4",
+    "babel-loader": "^6.2.0",
+    "babel-plugin-webpack-loaders": "^0.1.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babel-preset-react-hmre": "^1.0.0",
+    "babel-preset-stage-1": "^6.5.0",
+    "babel-preset-stage-2": "^6.3.13",
+    "babel-register": "^6.3.13",
+    "brfs": "^1.4.3",
+    "chloride": "^2.1.1",
+    "codecov.io": "0.1.6",
+    "coffee-script": "^1.10.0",
+    "commitizen": "^2.5.0",
+    "compression": "^1.6.0",
+    "cross-env": "^1.0.6",
+    "cz-conventional-changelog": "^1.1.5",
+    "eslint": "^1.10.3",
+    "eslint-config-rackt": "^1.1.1",
+    "eslint-plugin-babel": "^3.0.0",
+    "eslint-plugin-react": "^3.11.3",
+    "eventsource-polyfill": "^0.9.6",
+    "expect": "^1.13.4",
+    "expect-jsx": "^2.2.2",
+    "express": "^4.13.3",
+    "file-loader": "^0.8.5",
+    "ghooks": "0.3.2",
+    "guid": "0.0.12",
+    "is_js": "^0.7.6",
+    "json-loader": "^0.5.4",
+    "keypair": "^1.0.0",
+    "level-js": "^2.2.3",
+    "levelup": "^1.3.1",
+    "libsodium": "^0.3.0",
+    "malloc": "^1.1.0",
+    "memdb": "^1.3.1",
+    "mock-fs": "^3.8.0",
+    "nodemon": "^1.8.1",
+    "nyc": "^5.3.0",
+    "react-addons-test-utils": "^0.14.6",
+    "react-redux": "^4.4.2",
+    "redux": "^3.4.0",
+    "redux-saga": "^0.9.5",
+    "rimraf": "^2.4.3",
+    "semantic-release": "^4.3.5",
+    "socket.io": "^1.4.0",
+    "ssb-keys": "^5.0.1",
+    "supercop.js": "^1.0.1",
+    "swarmlog": "^1.4.0",
+    "transform-loader": "^0.2.3",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.12.9",
+    "webpack-dev-middleware": "^1.4.0",
+    "webpack-hot-middleware": "^2.6.0"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "npm run test && npm run check-coverage"
+    },
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "react": "^0.14.3",
+    "react-dom": "^0.14.3"
+  },
+  "release": {
+    "debug": false
+  }
+}
