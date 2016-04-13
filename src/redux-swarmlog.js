@@ -12,6 +12,8 @@ let _logSampleActions = (...args) => {
   if (_logLevel) console.log(args)
 }
 
+window.levelup = levelup
+
 window.clearTables = function () {
   indexedDB.deleteDatabase('IDBWrapper-foo')
   indexedDB.deleteDatabase('IDBWrapper-swarmlogs')
@@ -24,43 +26,76 @@ window.clearTables = function () {
   }
 }
 
-export function getSwarmLogsFromDb(callback) {
-  const reduxSwarmLogs = []
-  reduxSwarmLogsDb.createReadStream()
-  .on('data', data => {
-    const value = JSON.parse(data.value)
-    logJson(`hydrating from indexedDB`, value.hashKey)
-    reduxSwarmLogs.push(value)
-  })
-  .on('error', err => { console.log('Oh my!', err) })
-  .on('end', () => {
-    callback(reduxSwarmLogs)
+export function getSwarmLogsFromDb() {
+  return new Promise((resolve, reject) => {
+    const reduxSwarmLogs = []
+    reduxSwarmLogsDb.createReadStream()
+    .on('data', data => {
+      const value = JSON.parse(data.value)
+      logJson(`hydrating from indexedDB`, value.id)
+      reduxSwarmLogs.push(value)
+    })
+    .on('error', err => reject(err))
+    .on('end', () => resolve(reduxSwarmLogs))
   })
 }
 
-export function addReduxSwarmLog({ name, keys, id }) {
-  const hashKey = id
-  const keysJson = JSON.stringify({ name, keys, id }, null, 2)
-
-  if (_reduxSwarmLogs[hashKey]) {
-    console.log(`store named ${name} already exists`)
-    return
-  }
-
-  reduxSwarmLogsDb.get(hashKey, (err, value) => {
-    if (err && err.notFound) {
-      reduxSwarmLogsDb.put(keys.public, keysJson, (err) => {
+export function removeReduxSwarmLog(id) {
+  return new Promise((resolve, reject) => {
+    const reduxSwarmLog = _reduxSwarmLogs[id]
+    //console.log(_reduxSwarmLogs, id, reduxSwarmLog.db.close)
+    reduxSwarmLog.db.close()
+    const req = indexedDB.deleteDatabase(`IDBWrapper-${id}`)
+    req.onsuccess = () => {
+      console.log(`database deleted`)
+      reduxSwarmLogsDb.del(reduxSwarmLog.keys.public, err => {
         if (err) {
-          console.log('put error', name, keys, err)
+          console.log(`Couldn't delete database entry`)
+          reject()
+        } else {
+          console.log(`database entry deleted`)
+          resolve(`Database removed`)
         }
       })
     }
-    _reduxSwarmLogs[hashKey] = new ReduxSwarmLog({
-      name,
-      keys,
-      hashKey
+
+    req.onerror = () => {
+      console.log(`Couldn't delete database`)
+      reject()
+    }
+
+    req.onblocked = () => {
+      console.log(`Couldn't delete database blocked`)
+      reject()
+    }
+  })
+}
+
+export function addReduxSwarmLog(props) {
+  return new Promise((resolve, reject) => {
+    const { name, keys, id } = props
+    const propsJson = JSON.stringify(props, null, 2)
+
+    if (_reduxSwarmLogs[id]) {
+      console.log(`store named ${name} already exists`)
+      resolve(_reduxSwarmLogs[id])
+      return
+    }
+
+    reduxSwarmLogsDb.get(id, (err, value) => {
+      if (err && err.notFound) {
+        reduxSwarmLogsDb.put(keys.public, propsJson, (err) => {
+          if (err) return reject(err)
+        })
+      }
+      _reduxSwarmLogs[id] = new ReduxSwarmLog({
+        name,
+        keys,
+        id
+      })
+      logReplaicateActions(props)
+      resolve(_reduxSwarmLogs[id])
     })
-    logReplaicateActions(JSON.parse(keysJson))
   })
 }
 
@@ -94,13 +129,13 @@ export function reduxSwarmLogMiddleware() {
 }
 
 export default class ReduxSwarmLog {
-  constructor({ name, keys, hashKey }) {
-    this.db = levelup(hashKey, { db: leveljs })
+  constructor({ name, keys, id }) {
+    this.db = levelup(id, { db: leveljs })
     this.keys = keys
     this.log = this.getSwarmLog()
     this.name = name
     this.startReadStream()
-    this.hashKey = hashKey
+    this.id = id
     logJson(
       `CREATING ReduxSwarmLog ${name} and start listening`,
       this.keys,
@@ -135,9 +170,6 @@ export default class ReduxSwarmLog {
 
 function logJson(message, payload, color='black') {
   if (!_logLevel) return
-  if ( typeof payload === 'string') {
-
-  }
   console.log(
 `
 %c${message}:

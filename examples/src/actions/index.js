@@ -3,6 +3,7 @@ export const REMOVE_SONG_STORE = 'REMOVE_SONG_STORE'
 export const PUT_SONG_IN_SONG_STORE = 'PUT_SONG_IN_SONG_STORE'
 export const REMOVE_SONG_FROM_SONG_STORE = 'REMOVE_SONG_FROM_SONG_STORE'
 export const ADD_SONG_STORE_SUCCEEDED = 'ADD_SONG_STORE_SUCCEEDED'
+export const REMOVE_SONG_STORE_SUCCEEDED = 'REMOVE_SONG_STORE_SUCCEEDED'
 
 export const songStoreActions = [
   ADD_SONG_STORE,
@@ -12,39 +13,31 @@ export const songStoreActions = [
   ADD_SONG_STORE_SUCCEEDED
 ]
 
-// {
-//   "name": "Main",
-//   "keys": {
-//     "curve": "ed25519",
-//     "public": "h95JVN6NbaITui+nnydEel3nGOKNcTG9cNzIe6+Wwjo=.ed25519",
-//     "private": "VTJHCRTYJ4rrcnQR6V/RmdO/QUrF85tNxZXMQc2WaQSH3klU3o1tohO6L6efJ0R6XecY4o1xMb1w3Mh7r5bCOg==.ed25519",
-//     "id": "@h95JVN6NbaITui+nnydEel3nGOKNcTG9cNzIe6+Wwjo=.ed25519"
-//   },
-//   "hashKey": "Main-h95JVN6NbaITui+nnydEel3nGOKNcTG9cNzIe6+Wwjo=.ed25519"
-// }
-
-
-export function addSongStore(meta) {
+export function addSongStore(swarmLogMeta) {
   return {
     type: ADD_SONG_STORE,
-    meta
-//    reduxSwarmLogId: songStoreId
+    swarmLogMeta
   }
 }
 
-export function addSongStoreSucceeded(meta) {
+export function addSongStoreSucceeded(swarmLogMeta) {
   return {
     type: ADD_SONG_STORE_SUCCEEDED,
-    meta
-//    reduxSwarmLogId: songStoreId
+    swarmLogMeta
   }
 }
 
 export function removeSongStore(songStoreId) {
   return {
     type: REMOVE_SONG_STORE,
-    songStoreId,
-//    reduxSwarmLogId: songStoreId
+    songStoreId
+  }
+}
+
+export function removeSongStoreSucceeded(songStoreId) {
+  return {
+    type: REMOVE_SONG_STORE_SUCCEEDED,
+    songStoreId
   }
 }
 

@@ -5,8 +5,7 @@ import App from './components/App'
 import rootReducer from './reducers/index'
 import { generateKeys } from './api'
 import * as _actions from './actions/index'
-import createSagaMiddleware from 'redux-saga'
-import { addSongStore } from './sagas'
+import { sagaMiddleware } from './sagas'
 import { bindActionCreators } from 'redux'
 
 import {
@@ -18,12 +17,8 @@ import {
 import {
   configureReduxSwarmLog,
   reduxSwarmLogMiddleware,
-  getSwarmLogsFromDb,
-  addReduxSwarmLog
+  getSwarmLogsFromDb
 } from '../../src/redux-swarmlog'
-
-
-const sagaMiddleware = createSagaMiddleware(addSongStore)
 
 const store = createStore(
   rootReducer,
@@ -48,17 +43,14 @@ configureReduxSwarmLog({
   logLevel: 1
 })
 
-//_actions.addSongStore({ name: 'My Songs' })
-
-
-getSwarmLogsFromDb(reduxSwarmLogs => {
-  if (reduxSwarmLogs.length === 0) {
-    actions.addSongStore({ name: 'My Songs' })
-  } else {
-    console.log(reduxSwarmLogs)
-    reduxSwarmLogs.forEach(actions.addSongStore)
-  }
-})
+getSwarmLogsFromDb()
+  .then(reduxSwarmLogs => {
+    if (reduxSwarmLogs.length === 0) {
+      actions.addSongStore({ name: 'My Songs' })
+    } else {
+      reduxSwarmLogs.forEach(actions.addSongStore)
+    }
+  })
 
 render(
   <Provider store={store}>
@@ -78,8 +70,18 @@ function logSampleActions(id) {
 %c// remove song
 %cactions.removeSongFromSongStore('${id}', 'hello')
 
+%c// add song store
+%cactions.addSongStore({ name: 'New Song Store' })
+
+%c// remove song store
+%cactions.removeSongStore('${id}')
+
 `,
 'font-weight: bold',
+'font-style: italic; color: #888',
+'color: #559',
+'font-style: italic; color: #888',
+'color: #559',
 'font-style: italic; color: #888',
 'color: #559',
 'font-style: italic; color: #888',

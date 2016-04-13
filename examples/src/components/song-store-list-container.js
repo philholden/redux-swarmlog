@@ -7,10 +7,10 @@ import {
 } from '../actions/index'
 
 
-const SongStoreItem = ({ id, onRemove }) => {
+const SongStoreItem = ({ name, onRemove }) => {
   return (
     <div>
-      { id }
+      { name }
       {' '}
       <button onClick={onRemove}>Remove</button>
     </div>
@@ -20,11 +20,12 @@ const SongStoreItem = ({ id, onRemove }) => {
 const SongStoreList = ({ songStores, removeSongStore }) => {
   return (
     <div>
-      { songStores.map(songStore => (
+      { songStores.map(({ id, name }) => (
           <SongStoreItem { ...{
-            id: songStore.id,
-            onRemove: () => removeSongStore(songStore.id),
-            key: songStore.id
+            id,
+            name,
+            onRemove: () => removeSongStore(id),
+            key: id
           } } />
         ))
       }
@@ -35,8 +36,7 @@ const SongStoreList = ({ songStores, removeSongStore }) => {
 const mapStateToProps = ({ songStores }) => ({
   songStores: Object.keys(songStores)
     .map(key => ({
-      ...songStores[key],
-      id: key
+      ...songStores[key].swarmLogMeta
     }))
 })
 

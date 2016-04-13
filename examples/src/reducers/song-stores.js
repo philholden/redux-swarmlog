@@ -1,7 +1,7 @@
 import {
   ADD_SONG_STORE,
   ADD_SONG_STORE_SUCCEEDED,
-  REMOVE_SONG_STORE,
+  REMOVE_SONG_STORE_SUCCEEDED,
   PUT_SONG_IN_SONG_STORE,
   REMOVE_SONG_FROM_SONG_STORE
 } from '../actions/index'
@@ -24,17 +24,17 @@ export function root(state = {}, action) {
 export default function songStores(state = {}, action) {
   switch (action.type) {
     case ADD_SONG_STORE_SUCCEEDED:
-      console.log(action, action.meta.id,action.meta)
+      console.log(action, action.swarmLogMeta.id,action.swarmLogMeta)
       return {
         ...state,
-        [action.meta.id]: {
+        [action.swarmLogMeta.id]: {
 //          id: action.songStoreId,
-          meta: { ...action.meta },
+          swarmLogMeta: { ...action.swarmLogMeta },
           songs: {}
         }
       }
-    case REMOVE_SONG_STORE: {
-      const songStores = ({ ...state })[action.id]
+    case REMOVE_SONG_STORE_SUCCEEDED: {
+      const songStores = { ...state }
       delete songStores[action.songStoreId]
       return songStores
     }
