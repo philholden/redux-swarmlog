@@ -7,7 +7,6 @@ const sessionId = randomBytes(32).toString('base64')
 const reduxSwarmLogsDb = levelup('swarmlogs', { db: leveljs })
 let _reduxSwarmLogs = {}
 let _reduxStore
-let _generateKeys
 let _logLevel
 let _logSampleActions = (...args) => {
   if (_logLevel) console.log(args)
@@ -26,40 +25,42 @@ window.clearTables = function () {
 }
 
 export function getSwarmLogsFromDb(callback) {
+  const reduxSwarmLogs = []
   reduxSwarmLogsDb.createReadStream()
   .on('data', data => {
     const value = JSON.parse(data.value)
-    console.log(`hydrating: "${value.hashKey}" from indexedDB`)
-    logReplaicateActions(value)
-    _reduxSwarmLogs[value.hashKey] = new ReduxSwarmLog(value)
+    logJson(`hydrating from indexedDB`, value.hashKey)
+    reduxSwarmLogs.push(value)
   })
   .on('error', err => { console.log('Oh my!', err) })
   .on('end', () => {
-    callback(_reduxSwarmLogs)
+    callback(reduxSwarmLogs)
   })
 }
 
-export function addReduxSwarmLog({ name, keys }) {
-  const hashKey = `${name}-${keys.public}`
+export function addReduxSwarmLog({ name, keys, id }) {
+  const hashKey = id
+  const keysJson = JSON.stringify({ name, keys, hashKey }, null, 2)
+
   if (_reduxSwarmLogs[hashKey]) {
     console.log(`store named ${name} already exists`)
+    return
   }
+
   reduxSwarmLogsDb.get(hashKey, (err, value) => {
     if (err && err.notFound) {
-      const keysJson = JSON.stringify({ name, keys, hashKey }, null, 2)
       reduxSwarmLogsDb.put(keys.public, keysJson, (err) => {
         if (err) {
           console.log('put error', name, keys, err)
-        } else {
-          _reduxSwarmLogs[hashKey] = new ReduxSwarmLog({
-            name,
-            keys,
-            hashKey
-          })
-          logReplaicateActions(JSON.parse(keysJson))
         }
       })
     }
+    _reduxSwarmLogs[hashKey] = new ReduxSwarmLog({
+      name,
+      keys,
+      hashKey
+    })
+    logReplaicateActions(JSON.parse(keysJson))
   })
 }
 
@@ -67,13 +68,11 @@ window.addReduxSwarmLog = addReduxSwarmLog
 
 export function configureReduxSwarmLog({
   reduxStore,
-  generateKeys,
   logSampleActions = _logSampleActions,
   logLevel = 1
 }) {
   _reduxStore = reduxStore
-  _generateKeys = generateKeys
-  _logSampleActions = logSampleActions,
+  _logSampleActions = logSampleActions
   _logLevel = logLevel
 }
 
@@ -136,11 +135,19 @@ export default class ReduxSwarmLog {
 
 function logJson(message, payload, color='black') {
   if (!_logLevel) return
+  if ( typeof payload === 'string') {
+
+  }
   console.log(
 `
 %c${message}:
 
-%c${JSON.stringify(payload, null, 2)}
+%c${
+  typeof payload === 'string' ?
+  payload:
+  JSON.stringify(payload, null, 2)
+}
+
 `,
     `font-weight: bold; color: ${color}`,
     'font-weight: normal'
@@ -149,8 +156,8 @@ function logJson(message, payload, color='black') {
 
 function logReplaicateActions(keysJson) {
   if (!_logLevel) return
-  console.log(
-`%cexecute snipit in console on incognito browser or remote machine to sync store there:
+  console.log(`
+%cexecute this snippet on remote machine (or local incognito window) to sync store there:
 
 %caddReduxSwarmLog(${JSON.stringify(keysJson, null, 2)})
 

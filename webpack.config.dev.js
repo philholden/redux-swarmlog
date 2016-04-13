@@ -12,6 +12,7 @@ module.exports = {
 
   entry:{
     bundle: [
+      'babel-polyfill',
       'eventsource-polyfill', // necessary for hot reloading with IE
       'webpack-hot-middleware/client',
       './examples/src/index'

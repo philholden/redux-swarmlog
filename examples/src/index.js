@@ -5,6 +5,9 @@ import App from './components/App'
 import rootReducer from './reducers/index'
 import { generateKeys } from './api'
 import * as actions from './actions/index'
+import createSagaMiddleware from 'redux-saga'
+import { addSongStore } from './sagas'
+import { bindActionCreators } from 'redux'
 
 import {
   createStore,
@@ -19,16 +22,22 @@ import {
   addReduxSwarmLog
 } from '../../src/redux-swarmlog'
 
+
+const sagaMiddleware = createSagaMiddleware(addSongStore)
+
 const store = createStore(
   rootReducer,
   compose(
     applyMiddleware(
       reduxSwarmLogMiddleware,
+      sagaMiddleware
     ),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )
 )
 
+const _actions = bindActionCreators(actions, store.dispatch)
+window._actions = _actions
 window.actions = actions
 window.dispatch = store.dispatch
 
@@ -39,14 +48,25 @@ configureReduxSwarmLog({
   logLevel: 1
 })
 
+_actions.addSongStore({ name: 'Main' })
+
+/*
 getSwarmLogsFromDb(reduxSwarmLogs => {
-  if (Object.keys(reduxSwarmLogs).length === 0) {
-    const name = 'Main'
-    generateKeys()
-      .then(keys => addReduxSwarmLog({ name, keys }))
+  const action = log =>
+    store.dispatch(actions.addSongStore(log))
+
+  if (reduxSwarmLogs.length === 0) {
+//    const name = 'Main'
+    action({ name: 'Main' })
+//    generateKeys()
+//    .then(keys => addReduxSwarmLog({ name, keys }))
+//      .then(keys => addReduxSwarmLog({ name, keys }))
+  } else {
+    reduxSwarmLogs.forEach(actions)
+    //reduxSwarmLogs.forEach(addReduxSwarmLog)
   }
 })
-
+*/
 render(
   <Provider store={store}>
     <App />
@@ -57,18 +77,19 @@ render(
 function logSampleActions(hashKey) {
   console.log(
 `
-%cexecute in console to add song:
+%cthe following actions can be dispatched from the console:
 
+%c// add song
 %cdispatch(actions.putSongInSongStore('${hashKey}', {id: 'hello', text: 'world'}))
 
-%cexecute in console to remove song:
-
+%c// remove song
 %cdispatch(actions.removeSongFromSongStore('${hashKey}', 'hello'))
 
 `,
 'font-weight: bold',
-'font-weight: normal; color: #559',
-'font-weight: bold',
-'font-weight: normal; color: #559'
+'font-style: italic; color: #888',
+'color: #559',
+'font-style: italic; color: #888',
+'color: #559'
 )
 }

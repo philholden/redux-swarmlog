@@ -1,5 +1,6 @@
 import {
   ADD_SONG_STORE,
+  ADD_SONG_STORE_SUCCEEDED,
   REMOVE_SONG_STORE,
   PUT_SONG_IN_SONG_STORE,
   REMOVE_SONG_FROM_SONG_STORE
@@ -22,12 +23,13 @@ export function root(state = {}, action) {
 
 export default function songStores(state = {}, action) {
   switch (action.type) {
-    case ADD_SONG_STORE:
+    case ADD_SONG_STORE_SUCCEEDED:
+      console.log(action, action.meta.id,action.meta)
       return {
         ...state,
-        [action.songStoreId]: {
-          id: action.songStoreId,
-          ...action.meta,
+        [action.meta.id]: {
+//          id: action.songStoreId,
+          meta: { ...action.meta },
           songs: {}
         }
       }
