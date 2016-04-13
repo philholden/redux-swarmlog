@@ -1,7 +1,7 @@
 {
   "name": "@philholden/redux-swarmlog",
   "version": "0.0.1-semantic",
-  "description": "Sync Redux action log over WebRTC, persist log in IndexDB to give autosyncing persistent data",
+  "description": "nothing",
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf lib",
