@@ -40,7 +40,7 @@ export function getSwarmLogsFromDb(callback) {
 
 export function addReduxSwarmLog({ name, keys, id }) {
   const hashKey = id
-  const keysJson = JSON.stringify({ name, keys, hashKey }, null, 2)
+  const keysJson = JSON.stringify({ name, keys, id }, null, 2)
 
   if (_reduxSwarmLogs[hashKey]) {
     console.log(`store named ${name} already exists`)
@@ -166,5 +166,5 @@ function logReplaicateActions(keysJson) {
 'font-weight: normal; color: #559',
 
 )
-  _logSampleActions(keysJson.hashKey)
+  _logSampleActions(keysJson.id)
 }

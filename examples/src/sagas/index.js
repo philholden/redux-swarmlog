@@ -36,10 +36,8 @@ export function *addSongStore() {
 export function *getKeys(action) {
   let meta = action.meta || {}
   if (!action.meta.keys) {
-  console.log('here2')
     meta.keys = yield call(generateKeys)
-    console.log('here3')
-    meta.id = `${meta.name}-${meta.keys.public}`
+    meta.id = `${meta.name.replace(/\s/g,'_')}-${meta.keys.public}`
   }
   addReduxSwarmLog(meta)
   yield put(addSongStoreSucceeded(meta))
