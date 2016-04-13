@@ -8,6 +8,10 @@ const reduxSwarmLogsDb = levelup('swarmlogs', { db: leveljs })
 let _reduxSwarmLogs = {}
 let _reduxStore
 let _generateKeys
+let _logLevel
+let _logSampleActions = (...args) => {
+  if (_logLevel) console.log(args)
+}
 
 window.clearTables = function () {
   indexedDB.deleteDatabase('IDBWrapper-foo')
@@ -25,8 +29,8 @@ export function getSwarmLogsFromDb(callback) {
   reduxSwarmLogsDb.createReadStream()
   .on('data', data => {
     const value = JSON.parse(data.value)
-    console.log(`hydrating existing store "${value.name}":"${data.value}"`)
-    console.log(`addReduxSwarmLog(${data.value})`)
+    console.log(`hydrating: "${value.hashKey}" from indexedDB`)
+    logReplaicateActions(value)
     _reduxSwarmLogs[value.hashKey] = new ReduxSwarmLog(value)
   })
   .on('error', err => { console.log('Oh my!', err) })
@@ -52,9 +56,7 @@ export function addReduxSwarmLog({ name, keys }) {
             keys,
             hashKey
           })
-          console.log(`Key "${hashKey}" put in reduxSwarmLogs with value:\n${keysJson}`)
-          console.log(`addReduxSwarmLog(${keysJson})`)
-          console.log(`dispatch(actions.putSongInSongStore('${hashKey}', {id: 'hello', text: 'world'}))`)
+          logReplaicateActions(JSON.parse(keysJson))
         }
       })
     }
@@ -63,38 +65,48 @@ export function addReduxSwarmLog({ name, keys }) {
 
 window.addReduxSwarmLog = addReduxSwarmLog
 
-export function configureReduxSwarmLog(reduxStore, generateKeys) {
+export function configureReduxSwarmLog({
+  reduxStore,
+  generateKeys,
+  logSampleActions = _logSampleActions,
+  logLevel = 1
+}) {
   _reduxStore = reduxStore
   _generateKeys = generateKeys
+  _logSampleActions = logSampleActions,
+  _logLevel = logLevel
 }
 
 export function reduxSwarmLogMiddleware() {
   return next => action => {
     const reduxSwarmLog = _reduxSwarmLogs[action.reduxSwarmLogId]
     if (!action.fromSwarm && reduxSwarmLog) {
-      if(reduxSwarmLog) {
-        reduxSwarmLog.log.append(action)
-      }
-      next({
+      action = {
         ...action,
         swarmLogSessionId: sessionId
-      })
-    } else {
-      next(action)
+      }
+      if(reduxSwarmLog) {
+        reduxSwarmLog.log.append(action)
+        logJson('RTC SENT', action)
+      }
     }
+    next(action)
   }
 }
 
 export default class ReduxSwarmLog {
   constructor({ name, keys, hashKey }) {
-    console.log(`create ReduxSwarmLog object ${name}`)
     this.db = levelup(hashKey, { db: leveljs })
     this.keys = keys
     this.log = this.getSwarmLog()
     this.name = name
     this.startReadStream()
     this.hashKey = hashKey
-    console.log(this.keys, this.db)
+    logJson(
+      `CREATING ReduxSwarmLog ${name} and start listening`,
+      this.keys,
+      'green'
+    )
   }
 
   getSwarmLog() {
@@ -108,19 +120,44 @@ export default class ReduxSwarmLog {
   }
 
   startReadStream() {
-    console.log(`start listening to ${this.name}`)
     this.log.createReadStream({ live: true })
     .on('data', function (data) {
-      console.log('data')
       const action = data.value
-      console.log(action)
       if (action.swarmLogSessionId !== sessionId) {
         _reduxStore.dispatch({
           ...action,
           fromSwarm: true
         })
       }
-      console.log('RECEIVED', data.key, data.value)
+      logJson('RTC RECEIVED', data.value)
     })
   }
+}
+
+function logJson(message, payload, color='black') {
+  if (!_logLevel) return
+  console.log(
+`
+%c${message}:
+
+%c${JSON.stringify(payload, null, 2)}
+`,
+    `font-weight: bold; color: ${color}`,
+    'font-weight: normal'
+  )
+}
+
+function logReplaicateActions(keysJson) {
+  if (!_logLevel) return
+  console.log(
+`%cexecute snipit in console on incognito browser or remote machine to sync store there:
+
+%caddReduxSwarmLog(${JSON.stringify(keysJson, null, 2)})
+
+`,
+'font-weight: bold',
+'font-weight: normal; color: #559',
+
+)
+  _logSampleActions(keysJson.hashKey)
 }

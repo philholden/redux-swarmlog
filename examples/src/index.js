@@ -32,7 +32,13 @@ const store = createStore(
 window.actions = actions
 window.dispatch = store.dispatch
 
-configureReduxSwarmLog(store, generateKeys)
+configureReduxSwarmLog({
+  reduxStore: store,
+  generateKeys,
+  logSampleActions,
+  logLevel: 1
+})
+
 getSwarmLogsFromDb(reduxSwarmLogs => {
   if (Object.keys(reduxSwarmLogs).length === 0) {
     const name = 'Main'
@@ -47,3 +53,22 @@ render(
   </Provider>,
   document.getElementById('root')
 )
+
+function logSampleActions(hashKey) {
+  console.log(
+`
+%cexecute in console to add song:
+
+%cdispatch(actions.putSongInSongStore('${hashKey}', {id: 'hello', text: 'world'}))
+
+%cexecute in console to remove song:
+
+%cdispatch(actions.removeSongFromSongStore('${hashKey}', 'hello'))
+
+`,
+'font-weight: bold',
+'font-weight: normal; color: #559',
+'font-weight: bold',
+'font-weight: normal; color: #559'
+)
+}
