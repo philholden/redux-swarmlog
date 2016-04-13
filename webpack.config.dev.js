@@ -14,7 +14,7 @@ module.exports = {
     bundle: [
       'eventsource-polyfill', // necessary for hot reloading with IE
       'webpack-hot-middleware/client',
-      './src/index'
+      './examples/src/index'
     ],
     publish: [
       'eventsource-polyfill', // necessary for hot reloading with IE
@@ -56,7 +56,10 @@ module.exports = {
       {
         test: /\.jsx?/,
         loader: require.resolve('babel-loader'),
-        include: [ path.join(__dirname, 'src'),  path.join(__dirname, 'examples', 'src')]
+        include: [
+          path.join(__dirname, 'src'),
+          path.join(__dirname, 'examples', 'src')
+        ]
       },
       {
         test: /\.png$/,

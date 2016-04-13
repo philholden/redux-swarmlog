@@ -1,14 +1,13 @@
 import swarmlog from 'swarmlog'
 import leveljs from 'level-js'
 import levelup from 'levelup'
-//import generateKeys from './generate-keys'
-import { generateKeys } from './api'
 import { randomBytes } from 'crypto'
 
 const sessionId = randomBytes(32).toString('base64')
 const reduxSwarmLogsDb = levelup('swarmlogs', { db: leveljs })
 let _reduxSwarmLogs = {}
 let _reduxStore
+let _generateKeys
 
 window.clearTables = function () {
   indexedDB.deleteDatabase('IDBWrapper-foo')
@@ -17,6 +16,9 @@ window.clearTables = function () {
   Object.keys(_reduxSwarmLogs).forEach(key => {
     indexedDB.deleteDatabase(`IDBWrapper-${key}`)
   })
+  window.indexedDB.webkitGetDatabaseNames.onsuccess = (names) => {
+    console.log(names)
+  }
 }
 
 export function getSwarmLogsFromDb(callback) {
@@ -34,14 +36,6 @@ export function getSwarmLogsFromDb(callback) {
 }
 
 export function addReduxSwarmLog({ name, keys }) {
-  generateKeys()
-    .then((resp) => _addReduxSwarmLog({
-      name,
-      keys: keys || resp
-    }))
-}
-
-function _addReduxSwarmLog({ name, keys }) {
   const hashKey = `${name}-${keys.public}`
   if (_reduxSwarmLogs[hashKey]) {
     console.log(`store named ${name} already exists`)
@@ -69,8 +63,9 @@ function _addReduxSwarmLog({ name, keys }) {
 
 window.addReduxSwarmLog = addReduxSwarmLog
 
-export function configureReduxSwarmLog(reduxStore) {
+export function configureReduxSwarmLog(reduxStore, generateKeys) {
   _reduxStore = reduxStore
+  _generateKeys = generateKeys
 }
 
 export function reduxSwarmLogMiddleware() {

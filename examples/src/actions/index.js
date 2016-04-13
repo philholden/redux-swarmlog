@@ -10,11 +10,14 @@ export const songStoreActions = [
   REMOVE_SONG_FROM_SONG_STORE
 ]
 
-export function addSongStore(songStoreId) {
+export function addSongStore(songStoreId, { name }) {
   return {
     type: ADD_SONG_STORE,
     songStoreId,
-    reduxSwarmLogId: songStoreId
+    meta: {
+      name
+    }
+//    reduxSwarmLogId: songStoreId
   }
 }
 
@@ -22,7 +25,7 @@ export function removeSongStore(songStoreId) {
   return {
     type: REMOVE_SONG_STORE,
     songStoreId,
-    reduxSwarmLogId: songStoreId
+//    reduxSwarmLogId: songStoreId
   }
 }
 

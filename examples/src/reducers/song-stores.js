@@ -25,7 +25,11 @@ export default function songStores(state = {}, action) {
     case ADD_SONG_STORE:
       return {
         ...state,
-        [action.songStoreId]: {}
+        [action.songStoreId]: {
+          id: action.songStoreId,
+          ...action.meta,
+          songs: {}
+        }
       }
     case REMOVE_SONG_STORE: {
       const songStores = ({ ...state })[action.id]
@@ -44,18 +48,20 @@ export default function songStores(state = {}, action) {
 }
 
 function songStore(state = {}, action) {
+  const songs = { ...state.songs }
   switch (action.type) {
     case PUT_SONG_IN_SONG_STORE:
       return {
         ...state,
-        [action.song.id]: action.song
+        songs: {
+          ...songs,
+          [action.song.id]: action.song
+        }
       }
     case REMOVE_SONG_FROM_SONG_STORE: {
-      console.log(action, state)
-      const songs = { ...state }
       delete songs[action.songId]
-      console.log(`delete ${action.id}` + songs)
-      return songs
+//      console.log(`delete ${action.id}` + songs)
+      return { ...state, songs }
     }
     default:
       return state
