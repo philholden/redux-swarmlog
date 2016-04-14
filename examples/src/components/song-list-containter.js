@@ -2,43 +2,58 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import SongStoreSyncContainer from './song-store-sync-container'
-import SongStoreItemContainer from './song-store-item-container'
 import {
   addSongStore,
   removeSongStore
 } from '../actions/index'
 
 
-const SongStoreItem = ({ name, onRemove }) => {
+const SongItem = ({ name, onRemove }) => {
   return (
     <div>
-      <span style={styles.songStoreTitle}>{ name }</span>
+      <span style={styles.title}>{ name }</span>
       {' '}
       <button onClick={onRemove}>Remove</button>
     </div>
   )
 }
 
-const SongStoreList = ({
-  songStores,
-  removeSongStore,
-  addSongStore
+const AddSongForm = ({
+  songStoreId,
+  putSongInSongStore
+}) => {
+  let input
+  const onAddSong = () => putSongInSongStore({ id: input.value })
+
+  return (
+    <div>
+      <input type="text" ref={el => input = el} />
+      {' '}
+      <button onClick={onAddSong}>Add Song Store</button>
+    </div>
+  )
+}
+
+const SongList = ({
+  songStore,
+  putSongInSongStore,
+  removeSongFromSongStore
 }) => {
   let input
   const onAddSongStore = () => addSongStore({ name: input.value })
-  console.log(songStores)
   return (
     <div>
-      { songStores.map(({ id }) => (
+      {
+        songStores.map(({ id }) => (
           <SongStoreItemContainer id={id} key={id} />
         ))
       }
       <hr />
-      <input type="text" ref={el => input = el}/>
-      {' '}
-      <button onClick={onAddSongStore}>Add Song Store</button>
-      <hr />
-      <SongStoreSyncContainer />
+
+      <AddSongForm { ...{
+        putSongInSongStore,
+        songStoreId
+      } } />
     </div>
   )
 }

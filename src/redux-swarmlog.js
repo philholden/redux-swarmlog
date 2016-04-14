@@ -26,6 +26,19 @@ window.clearTables = function () {
   }
 }
 
+export const keyToUriId = (key) =>
+  key
+    .replace(/\//g,'_')
+    .replace(/\+/g,'-')
+    .replace(/=+\.ed25519/,'')
+
+export const uriIdToKey = (uriId) =>
+  uriId
+    .replace(/\_/g,'/')
+    .replace(/\-/g,'+') +
+    (uriId.length > 70 ? '=' : '') +
+    '=.ed25519'
+
 export function getSwarmLogsFromDb() {
   return new Promise((resolve, reject) => {
     const reduxSwarmLogs = []
@@ -73,6 +86,7 @@ export function removeReduxSwarmLog(id) {
 
 export function addReduxSwarmLog(props) {
   return new Promise((resolve, reject) => {
+    props.id = keyToUriId(props.keys.public)
     const { name, keys, id } = props
     const propsJson = JSON.stringify(props, null, 2)
 
@@ -93,7 +107,7 @@ export function addReduxSwarmLog(props) {
         keys,
         id
       })
-      logReplaicateActions(props)
+      _logSampleActions(props)
       resolve(_reduxSwarmLogs[id])
     })
   })
@@ -184,19 +198,4 @@ function logJson(message, payload, color='black') {
     `font-weight: bold; color: ${color}`,
     'font-weight: normal'
   )
-}
-
-function logReplaicateActions(keysJson) {
-  if (!_logLevel) return
-  console.log(`
-%cexecute this snippet on remote machine (or local incognito window) to sync store there:
-
-%caddReduxSwarmLog(${JSON.stringify(keysJson, null, 2)})
-
-`,
-'font-weight: bold',
-'font-weight: normal; color: #559',
-
-)
-  _logSampleActions(keysJson.id)
 }

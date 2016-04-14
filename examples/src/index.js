@@ -59,10 +59,19 @@ render(
   document.getElementById('root')
 )
 
-function logSampleActions(id) {
+function logSampleActions({ id, keys, name }) {
   console.log(
 `
 %cthe following actions can be dispatched from the console:
+
+%c// clone song store over rtc on remote machine or in incognito window
+%cactions.addSongStore({
+  name: '${name} Clone',
+  keys: {
+    public: '${keys.public}',
+    private: '${keys.private}'
+  }
+})
 
 %c// add song
 %cactions.putSongInSongStore('${id}', {id: 'hello', text: 'world'})
@@ -70,7 +79,7 @@ function logSampleActions(id) {
 %c// remove song
 %cactions.removeSongFromSongStore('${id}', 'hello')
 
-%c// add song store
+%c// add new local song store
 %cactions.addSongStore({ name: 'New Song Store' })
 
 %c// remove song store
@@ -78,6 +87,8 @@ function logSampleActions(id) {
 
 `,
 'font-weight: bold',
+'font-style: italic; color: #888',
+'color: #559',
 'font-style: italic; color: #888',
 'color: #559',
 'font-style: italic; color: #888',
