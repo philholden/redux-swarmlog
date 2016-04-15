@@ -128,7 +128,7 @@ export function configureReduxSwarmLog({
 export function reduxSwarmLogMiddleware() {
   return next => action => {
     const reduxSwarmLog = _reduxSwarmLogs[action.reduxSwarmLogId]
-    if (!action.fromSwarm && reduxSwarmLog) {
+    if (!action.fromSwarm && reduxSwarmLog && reduxSwarmLog.keys.private) {
       action = {
         ...action,
         swarmLogSessionId: sessionId

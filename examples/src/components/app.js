@@ -9,7 +9,9 @@ class App extends Component {
       <div>
       <SongStoreListContainer />
       <pre>
-        {JSON.stringify(this.props.state, null, 2)}
+        {
+        //  JSON.stringify(this.props.state, null, 2)
+        }
       </pre>
       </div>
 

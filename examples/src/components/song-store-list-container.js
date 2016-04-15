@@ -4,40 +4,19 @@ import { bindActionCreators } from 'redux'
 import SongStoreSyncContainer from './song-store-sync-container'
 import SongStoreItemContainer from './song-store-item-container'
 import {
-  addSongStore,
-  removeSongStore
+  addSongStore
 } from '../actions/index'
 
-
-const SongStoreItem = ({ name, onRemove }) => {
-  return (
-    <div>
-      <span style={styles.songStoreTitle}>{ name }</span>
-      {' '}
-      <button onClick={onRemove}>Remove</button>
-    </div>
-  )
-}
-
 const SongStoreList = ({
-  songStores,
-  removeSongStore,
-  addSongStore
+  songStores
 }) => {
   let input
-  const onAddSongStore = () => addSongStore({ name: input.value })
-  console.log(songStores)
   return (
     <div>
       { songStores.map(({ id }) => (
           <SongStoreItemContainer id={id} key={id} />
         ))
       }
-      <hr />
-      <input type="text" ref={el => input = el}/>
-      {' '}
-      <button onClick={onAddSongStore}>Add Song Store</button>
-      <hr />
       <SongStoreSyncContainer />
     </div>
   )
@@ -50,14 +29,13 @@ const mapStateToProps = ({ songStores }) => ({
     }))
 })
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-  addSongStore,
-  removeSongStore
-}, dispatch)
+// const mapDispatchToProps = dispatch => bindActionCreators({
+//   addSongStore
+// }, dispatch)
 
 const SongStoreListContainer = connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 ) (SongStoreList)
 
 export default SongStoreListContainer
@@ -67,5 +45,8 @@ const styles = {
     fontSize: 20,
     fontWeight: 'bold',
     fontFamily: 'sans-serif'
+  },
+  inputWrapper: {
+    margin: '6px 0'
   }
 }
