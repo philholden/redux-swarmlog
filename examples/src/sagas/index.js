@@ -8,7 +8,9 @@ import {
   getSwarmLogsFromDb,
   addReduxSwarmLog,
   removeReduxSwarmLog
-} from '../../../src/redux-swarmlog'
+}
+//from '../../../src/redux-swarmlog'
+from '../../../lib/index'
 
 import {
   ADD_SONG_STORE,

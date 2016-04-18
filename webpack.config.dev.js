@@ -6,9 +6,9 @@ let webpack = require('webpack')
 console.log(__dirname)
 
 module.exports = {
-  node: {
-    fs: 'empty'
-  },
+  // node: {
+  //   fs: 'empty'
+  // },
 
   entry:{
     bundle: [

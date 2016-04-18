@@ -7,8 +7,12 @@ module.exports = {
     './src/index'
   ],
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
+    // export itself to a global var
+    libraryTarget: 'commonjs2',
+    // name of the global var: "Foo"
+    library: 'redux-swarmlog',
+    path: path.join(__dirname, 'lib'),
+    filename: 'index.js',
     publicPath: '/static/'
   },
   plugins: [
@@ -24,17 +28,41 @@ module.exports = {
       }
     })
   ],
+  resolve: {
+    modulesDirectories: [
+      path.join(__dirname, 'src'),
+      'node_modules',
+      'node_modules/component-archetype/node_modules'
+    ]
+  },
   module: {
+    postLoaders: [
+      {
+        loader: 'transform?brfs'
+      }
+    ],
     loaders: [
       {
-        test: /\.js$/,
-        loaders: [ 'babel' ],
-        include: path.join(__dirname, 'src')
+        test: /\.jsx?/,
+        loader: require.resolve('babel-loader'),
+        include: [
+          path.join(__dirname, 'src'),
+          path.join(__dirname, 'examples', 'src')
+        ]
       },
       {
         test: /\.png$/,
-        loaders: [ 'url-loader?limit=7000' ]
-      }
+        loader: require.resolve('url-loader') + '?limit=100000'
+      },
+      {
+        test: /\.json$/,
+        loader: require.resolve('json-loader')
+      },
+      // {
+      //   test: /\.js$/,
+      //   loader: 'transform?brfs'
+      // }
+
     ]
   }
 }

@@ -14,11 +14,21 @@ import {
   compose
 } from 'redux'
 
+import phil from '../../lib/index'
+
 import {
   configureReduxSwarmLog,
   reduxSwarmLogMiddleware,
   getSwarmLogsFromDb
-} from '../../src/redux-swarmlog'
+}
+//from '../../src/redux-swarmlog'
+from '../../lib/index'
+
+console.log({
+  configureReduxSwarmLog,
+  reduxSwarmLogMiddleware,
+  getSwarmLogsFromDb
+},phil)
 
 const store = createStore(
   rootReducer,

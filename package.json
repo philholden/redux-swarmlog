@@ -4,10 +4,10 @@
   "description": "nothing",
   "main": "lib/index.js",
   "scripts": {
-    "clean": "rimraf lib",
+    "clean": "rimraf lib dist",
     "build:webpack": "cross-env NODE_ENV=production webpack --config webpack.config.prod.js",
     "build:babel": "NODE_ENV=lib babel src --out-dir lib",
-    "build": "npm run clean && npm run build:babel",
+    "build": "npm run clean && npm run build:webpack",
     "start": "node devServer.js",
     "lint": "eslint src",
     "commit": "git-cz",
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/philholden/component-boilerplate.git"
+    "url": "https://github.com/philholden/redux-swarmlog.git"
   },
   "keywords": [
     "react",
@@ -39,9 +39,9 @@
   "author": "Phil Holden (http://github.com/philholden)",
   "license": "CC0",
   "bugs": {
-    "url": "https://github.com/philholden/component-boilerplate/issues"
+    "url": "https://github.com/philholden/redux-swarmlog/issues"
   },
-  "homepage": "https://github.com/philholden/component-boilerplate/",
+  "homepage": "https://github.com/philholden/redux-swarmlog/",
   "devDependencies": {
     "ava": "^0.9.1",
     "babel-cli": "^6.4.0",
