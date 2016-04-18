@@ -13,17 +13,14 @@ let _logSampleActions = (...args) => {
 }
 
 window.levelup = levelup
+window.clearTables = clearTables
 
-window.clearTables = function () {
+export function clearTables() {
   indexedDB.deleteDatabase('IDBWrapper-foo')
   indexedDB.deleteDatabase('IDBWrapper-swarmlogs')
-  indexedDB.deleteDatabase('IDBWrapper-Main-song-store')
   Object.keys(_reduxSwarmLogs).forEach(key => {
     indexedDB.deleteDatabase(`IDBWrapper-${key}`)
   })
-  window.indexedDB.webkitGetDatabaseNames.onsuccess = (names) => {
-    console.log(names)
-  }
 }
 
 export const keyToUriId = (key) =>

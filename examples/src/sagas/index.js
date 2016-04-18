@@ -44,3 +44,4 @@ function *removeSongStoreFromDb(action) {
   yield removeReduxSwarmLog(action.songStoreId)
   yield put(removeSongStoreSucceeded(action.songStoreId))
 }
+
