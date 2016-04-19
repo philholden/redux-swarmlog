@@ -14,7 +14,7 @@ test('is an array of numbers', t => {
   )
 })
 
-test('1 is in array', t => {
+test('1 is in the array', t => {
   t.true(
     is.inArray(1, [ 1, 2, 3 ])
   )
