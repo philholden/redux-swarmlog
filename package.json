@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/philholden/redux-swarmlog/",
   "devDependencies": {
-    "ava": "^0.9.1",
+    "ava": "^0.14.0",
     "babel-cli": "^6.4.0",
     "babel-core": "^6.3.15",
     "babel-eslint": "^5.0.0-beta4",
@@ -61,6 +61,7 @@
     "coffee-script": "^1.10.0",
     "commitizen": "^2.5.0",
     "compression": "^1.6.0",
+    "conventional-changelog": "^1.1.0",
     "cross-env": "^1.0.6",
     "cz-conventional-changelog": "^1.1.5",
     "eslint": "^1.10.3",
