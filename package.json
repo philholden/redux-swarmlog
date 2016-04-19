@@ -1,6 +1,7 @@
 {
   "name": "@philholden/redux-swarmlog",
   "description": "nothing",
+  "version":"0.0.1-semantic",
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf lib dist",
