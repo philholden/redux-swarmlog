@@ -17,7 +17,7 @@
     "test": "NODE_ENV=test ava src/**/*.test.js --require babel-register --require ./src/__tests__/null-compiler",
     "test:watch": "nodemon -w src --exec 'npm t -- --verbose'",
     "test:cover": "nyc --reporter=lcov --reporter=text npm t",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish --access=public && semantic-release post"
   },
   "repository": {
     "type": "git",
