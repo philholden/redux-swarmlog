@@ -1,35 +1,42 @@
-# Component Boilerplate
+# Redux Swarmlog
 
-[![travis build](https://img.shields.io/travis/philholden/component-boilerplate.svg?style=flat-square)](https://travis-ci.org/philholden/component-boilerplate)
-[![codecov coverage](https://img.shields.io/codecov/c/github/philholden/component-boilerplate.svg?style=flat-square)](https://codecov.io/github/philholden/component-boilerplate)
-[![version](https://img.shields.io/npm/v/@philholden/component-boilerplate.svg?style=flat-square)](http://npm.im/@philholden/component-boilerplate)
-[![downloads](https://img.shields.io/npm/dm/@philholden/component-boilerplate.svg?style=flat-square)](http://npm-stat.com/charts.html?package=@philholden/component-boilerplate&from=2015-08-01)
-[![CC0 License](https://img.shields.io/npm/l/@philholden/component-boilerplate.svg?style=flat-square)](https://creativecommons.org/publicdomain/zero/1.0/)
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square)](https://github.com/semantic-release/semantic-release)
+[![travis build](https://img.shields.io/travis/philholden/redux-swarmlog.svg?style=flat-square)](https://travis-ci.org/philholden/redux-swarmlog) [![version](https://img.shields.io/npm/v/@philholden/redux-swarmlog.svg?style=flat-square)](http://npm.im/@philholden/redux-swarmlog)
 
+![ScreenShot](https://raw.github.com/philholden/todomvc-redux-swarmlog/master/redux-swarmlog-egghead.png)
 
-This is a hybrid of [React Transform Boilerplate](https://github.com/gaearon/react-transform-boilerplate) and Kent C Dodds' [How to Write an Open Source JavaScript Library](https://egghead.io/lessons/javascript-how-to-write-a-javascript-library-introduction). It has the following features:
+A super simple way of writing distributed Redux applications. The [Redux](https://github.com/reactjs/redux) action log is persisted in an IndexDB and synced with other peers via a [WebRTC Swarm](https://github.com/mafintosh/webrtc-swarm) using [Swarmlog](https://github.com/substack/swarmlog).
 
-* Babel 6 hot loading
-* Testing via AVA
-* Null loaders to allow unit testing where components use loaders for CSS or images 
-* WebSockets via Socket.IO set up on server (delete if not needed)
-* All the semantic release, code coverage etc from Kent C Dodds
+When an application reloads the Redux store is initialsed by reducing all the persisted actions in the IndexDB and syncing any new actions from remote peers. Watch the Egghead video above to find out more.
 
-## Installation
+## Pros
 
-```bash
-git clone https://github.com/philholden/component-boilerplate.git
-cd component-boilerplate
-npm install
-npm start
-open http://localhost:3000
-```
+* super simple mental model for writing distributed apps
+* UIs update automatically as remote actions come in 
+* works offline by default
+* scales globally for free with no bandwidth or storage costs for the developer
+* the developer is not responsible for client data
+* friends not cooperations hold user data 
+* public / private key authentication is lighter weight than user accounts
+* time travel 
 
-## When setting up a new repo
+## Cons
 
-`semantic-release-cli setup`
+  * Action logs use more bandwidth than raw data so initial sync could be slow for a very long log.
+  
+  __workaround:__ Break down long logs into lots of smaller logs e.g. log per month, week or day. Only fetch the most recent log if its all thats needed
+  
+  * Extra storage space needed on client
+  
+  __workaround:__ The price of SSDs is falling very rapidly. Stop thinking about cloud and thin client, but cache encrypted data where it is needed. This gives privacy, enables working offline, provides backups and can act as a CDN. Once you start using a distributed system like Git you soon stop thinking about the extra space it requires. 
 
-## License
+  * Permanence: even if an action deletes an item it can still be retrieved from the log.
+  
+ __workaround:__ Use a log for versioning other logs. Every so often the main log is reduced and a single action is written to a new log which creates the store in the current state. The old log is marked as stale in the version log and its database is deleted (purging old actions).
+ 
+  * Can't get most up to date data if the peer holding it is offline
 
-CC0 (public domain)
+  __workaround:__ A small device like a Raspberry PI kept online should be all that is needed to make sure there is always at least one up to date source of truth. With 5G and IoT we are heading towards an era of always online small connected devices. Let's start thinking that way now.
+
+## Play to Strengths
+
+Redux Swarmlog works well for apps that support some kind of physical live event. Because you know the action log will be short and the users will be online at the same time. Examples might be providing subtitles via mobile phone for a theatre show or letting a teacher see in realtime how each individuals in a class is answering a question. 
