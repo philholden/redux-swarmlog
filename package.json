@@ -60,7 +60,7 @@
     "chloride": "^2.1.1",
     "codecov.io": "0.1.6",
     "coffee-script": "^1.10.0",
-    "commitizen": "^2.5.0",
+    "commitizen": "^2.7.6",
     "compression": "^1.6.0",
     "conventional-changelog": "^1.1.0",
     "cross-env": "^1.0.6",
@@ -105,15 +105,14 @@
     "webpack-hot-middleware": "^2.6.0"
   },
   "config": {
+    "ghooks": {
+      "pre-commit": "npm run test && npm run check-coverage"
+    },
     "commitizen": {
       "path": "node_modules/cz-conventional-changelog"
     }
   },
-  "dependencies": {
-    "react": "^0.14.3",
-    "react-dom": "^0.14.3"
-  },
   "release": {
-    "debug": false
+    "debug": true
   }
 }

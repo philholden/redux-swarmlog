@@ -10,6 +10,7 @@ When an application reloads the Redux store is initialsed by reducing all the pe
 
 ## Pros
 
+* offline data by default
 * super simple mental model for writing distributed apps
 * UIs update automatically as remote actions come in 
 * works offline by default
