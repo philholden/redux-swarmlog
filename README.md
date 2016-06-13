@@ -2,7 +2,13 @@
 
 [![travis build](https://img.shields.io/travis/philholden/redux-swarmlog.svg?style=flat-square)](https://travis-ci.org/philholden/redux-swarmlog) [![version](https://img.shields.io/npm/v/@philholden/redux-swarmlog.svg?style=flat-square)](http://npm.im/@philholden/redux-swarmlog)
 
+[![Video](http://img.youtube.com/vi/M99djS07Ph8/0.jpg)](http://www.youtube.com/watch?v=M99djS07Ph8)
+
+_(Click image to watch React Europe lightning video)_
+
 <a href="https://egghead.io/lessons/react-redux-peer-to-peer-todomvc-over-webrtc-using-swarmlog" target="_blank">![ScreenShot](https://raw.github.com/philholden/todomvc-redux-swarmlog/master/redux-swarmlog-egghead.png)</a>
+
+_(Click image to watch Egghead.io intro video)_
 
 A super simple way of writing distributed Redux applications. The [Redux](https://github.com/reactjs/redux) action log is persisted in an IndexDB and synced with other peers via a [WebRTC Swarm](https://github.com/mafintosh/webrtc-swarm) using [Swarmlog](https://github.com/substack/swarmlog).
 
