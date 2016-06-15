@@ -22,7 +22,7 @@ When an application reloads the Redux store is initialsed by reducing all the pe
 * works offline by default
 * scales globally for free with no bandwidth or storage costs for the developer
 * the developer is not responsible for client data
-* friends not cooperations hold user data 
+* friends not corporations hold user data 
 * public / private key authentication is lighter weight than user accounts
 * time travel 
 
